@@ -6,11 +6,11 @@ from os import path
 
 x = Symbol('x') # horizontal distance the lifeguard must travel before entering the water
 X = 0
-Vs, Vw = 2.7, 0.9 # speed in sand and speed in water
+Vs, Vw = 2.7, 0.9 # speed in sand and speed in water (m/s)
 
-Ds = 30 # distance from the lifeguard to the beach (0 <= Ds <= 30)
-Dw = 150 # distance from the beach to the target (0 <= Dw <= 300)
-l = 0 # total horizontal distance between the lifeguard and target
+Ds = 30 # distance (m) from the lifeguard to the beach (0 <= Ds <= 30)
+Dw = 150 # distance (m) from the beach to the target (0 <= Dw <= 300)
+l = 0 # total horizontal distance (m) between the lifeguard and target
 
 def find_T(x,Hs,Hw,l): # find the time required to traverse a given path specified by x, Hs, Hw, and l
 	return (((Hs**2)+(x**2))**0.5)/Vs + (((Hw**2)+((l-x)**2))**0.5)/Vw
@@ -72,7 +72,6 @@ h = ms*p + mw*p + (2*C+1)*p # 30 m sand + 150 m water + 2 m padding
 w = 150*p + (2*B+1)*p # 150m + Bm left padding + 1m right padding
 screen = pygame.display.set_mode((w,h))
 pygame.display.set_caption(f'Ds : {Ds} , Dw : {Dw}')
-#pygame.event.set_blocked(pygame.MOUSEMOTION)
 
 X, Y, _theta_s, _theta_w, T, T_prime = calculate(l,Ds,Dw,Vs,Vw)
 
@@ -100,8 +99,6 @@ while __name__ == '__main__':
         Dw = (pos[1]- p*(ms + 1 + C))//p
         change = True
 
-    #pygame.draw.circle(screen, color_lookup[5], (pos[0],pos[1]), 10)
-
     Ds = max(min(ms,Ds),0)
     Dw = max(min(mw,Dw),0)
     l = max(min(150,l),0)
@@ -128,6 +125,5 @@ while __name__ == '__main__':
     pygame.draw.line(screen, color_lookup[3], (p*B,p*(ms+C-Ds)), (p*(B+Y),p*(ms+C))) # lifeguard to straight point
     pygame.draw.line(screen, color_lookup[3], (p*(B+Y),p*(ms+C)), (p*(B+l),p*(ms+C+Dw))) # straight point to target
 
-    #pygame.time.delay(40)
     pygame.display.set_caption(f'Ds : {Ds} , Dw : {Dw}, l : {l}, optimal time : {T} , straight time : {T_prime} , ∆T : {round(T_prime-T,2)}')
     pygame.display.update()
