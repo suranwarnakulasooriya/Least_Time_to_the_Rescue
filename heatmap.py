@@ -4,11 +4,11 @@ from math import atan, pi # arctan to find the angles and pi to convert to degre
 import matplotlib.pyplot as plt
 
 x = Symbol('x') # horizontal distance the lifeguard must travel before entering the water
-Vs, Vw = 2.7, 0.9 # speed in sand and speed in water
+Vs, Vw = 2.7, 0.9 # speed in sand and speed in water (m/s)
 
-Ds = 10 # distance from the lifeguard to the beach (0 <= Ds <= 10)
-Dw = 0 # distance from the beach to the target (0 <= Dw <= 500)
-l = 0 # total horizontal distance between the lifeguard and target (0 <= l <= 150)
+Ds = 10 # distance (m) from the lifeguard to the beach (0 <= Ds <= 10)
+Dw = 0 # distance (m) from the beach to the target (0 <= Dw <= 500)
+l = 0 # total horizontal distance (m) between the lifeguard and target (0 <= l <= 150)
 
 def find_T(x,Hs,Hw,l): # find the time required to traverse a given path specified by x, Hs, Hw, and l
 	return (((Hs**2)+(x**2))**0.5)/Vs + (((Hw**2)+((l-x)**2))**0.5)/Vw
@@ -52,26 +52,15 @@ heatmap = [h]
 
 from random import randint
 
-#print('x values that could not be calculated:',end=' ')
 for Dw in range(5,dwr+5,5): # loop through various total horizontal distances
 	heatmap.append([0])
 	for l in range(5,lr+5,5):
-		#print(l,Dw)
-		#ind.append((l,Dw)) # append l and Dw to the list of values for the independent variable
 		_x, _theta_s, _theta_w, t, t_prime = calculate(l,Ds,Dw,Vs,Vw) # calculate values with the given l
-		# somtimes solve does not return valid solutions for l values that should have a solution, those l values are skipped
-		#_x = randint(0,10)
 		if _x != None and t != None and t_prime != None: # if the distance was valid
 			delta = round(float(t_prime-t),3)
 			print(delta)
-			#dep1.append(round(t-t_prime,3)) # append t and t_prime to the lists for the dependent variables
-			#dep2.append(t_prime)
 			heatmap[-1].append(delta)
-			#heatmap[-1].append(round(t-t_prime,3))
 		else:
-			#print(l,Dw,end=', ') # print any l values that yeiled no valid solutions
-			#dep1.append(0)
-			#print('stinky')
 			heatmap[-1].append(0)
 
 print()
@@ -87,12 +76,10 @@ if display == 'comparison':
     plt.plot(ind,dep2,label='$T_{Straight}$')
 elif display == 'delta':
 	plt.title('Difference Between T and Tʼ\n$d_{s}$ = 10 m',fontsize=30)
-	#plt.ylabel('∆T (s)')
 	import seaborn as sns
 	print(len(heatmap))
 	print(len(heatmap[0]))
 	print(len(heatmap[-1]))
-	#print(heatmap)
 	sns.set_context("paper", font_scale=2.5)
 	ax = sns.heatmap(heatmap,square=True,cbar_kws={'label':'∆T (s)','ticks':[i for i in range(0,60,5)],'shrink':1}) 
 	ax.set_xlabel('$l$ (m)',fontsize=30)
@@ -102,13 +89,6 @@ elif display == 'delta':
 	ax.set_xticklabels([i for i in range(0,lr+10,20)],fontsize=20)
 	ax.set_yticklabels([i for i in range(0,dwr+10,20)],fontsize=20)
 	ax.xaxis.tick_top()
-
-	#dep3 = []
-	#for i in range(len(dep1)): # create list of delta values
-#		dep3.append(dep2[i]-dep1[i])
-	#plt.plot(ind,dep3,label='Difference Between Times for Optimal Path and Straight-Line Path')
-
-#plt.xlabel('Horizontal Distance ($l$) in ft')
 
 plt.show()
 plt.clf()
